@@ -1,15 +1,15 @@
-## sflix
+# sflix
 
 React를 활용한 영화정보공유 웹사이트
 
-# Screens
+## Screens
 
 - [ ] Home
-- [ ] TV Shows
+- [ ] TV
 - [ ] Search
 - [ ] Detail
 
-# 진행상황
+## 진행상황
 
 21.04.30
 
