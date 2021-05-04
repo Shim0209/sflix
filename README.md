@@ -33,3 +33,7 @@ React를 활용한 영화정보공유 웹사이트
 - 21.05.03
 
   api key 세팅, axios instance method로 데이터 가져오기, 컨테이너와 프리젠터 생성 for 라우터, 컨테이너 로직 세팅
+
+- 21.05.04
+
+  PropTypes 세팅,
