@@ -1,13 +1,14 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import Helmet from "react-helmet";
 import Loader from "Components/Loader";
 import Section from "Components/Section";
 import Message from "Components/Message";
 import Poster from "Components/Poster";
 
 const Container = styled.div`
-    padding: 0 20px;
+    padding:20px;
 `;
 
 const Form = styled.form`
@@ -22,6 +23,10 @@ const Input = styled.input`
 `;
 
 const SearchPresenter = ({ movieResults, tvResults, searchTerm, error, loading, handleSubmit, updateTerm }) => (
+    <>
+        <Helmet>
+            <title>Search | Sflix</title>
+        </Helmet>
         <Container>
             <Form onSubmit={handleSubmit}>
                 <Input placeholder="Search Movies or TV Shows..." value={searchTerm} onChange={updateTerm}></Input>
@@ -65,7 +70,8 @@ const SearchPresenter = ({ movieResults, tvResults, searchTerm, error, loading, 
                 </>
             )}
         </Container>
-    );
+    </>
+);
 
 SearchPresenter.propTypes = {
     movieResults: PropTypes.array,
