@@ -22,11 +22,9 @@ React를 활용한 영화정보공유 웹사이트
 
 ## 추가항목
 
-- [] IMDB Link
-- [] Tabs inside of Movie / TV Details (YT Vidoes, Production Company $ Coutries)
-- [] Collections Link
-- [] /collections Route
-- [] On TV Show, show seasons and creators
+- [x] IMDB Link
+- [x] Tabs inside of Movie / TV Details (YT Vidoes, Production Company $ Coutries)
+- [x] On TV Show, show seasons and creators
 
 ## 진행상황
 

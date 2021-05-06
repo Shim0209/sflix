@@ -49,10 +49,37 @@ const Divider = styled.span`
 `;
 
 const Overview = styled.p`
-    font-size:12px;
-    opacity: 0.7;
+    font-size:13px;
+    opacity: 0.8;
     line-height: 1.5;
     width:50%;
+`;
+
+const Network = styled.div`
+    margin:20px 0px;
+`;
+
+const VideoList = styled.ul`
+    margin: 20px 0;
+    line-height: 1.5;
+`;
+
+const VideoObj = styled.li``;
+
+const Linked = styled.a`
+    color: rgba(245, 197, 23, 1);
+`;
+
+const IMDB = styled.a`
+    background-color: rgba(245, 197, 23, 1);
+    border: none;
+    border-radius:5px;
+    padding:3px;
+    color:black;
+    font-weight:600;
+    :hover {
+        box-shadow: 1px 0px 10px tomato;
+    }
 `;
 
 const Backdrop = styled.div`
@@ -67,6 +94,23 @@ const Backdrop = styled.div`
     filter:blur(2px);
     opacity:0.5;
     z-index:0;
+`;
+
+const SeasonCount = styled.span`
+    color: rgba(245, 197, 23, 1);
+    border: none;
+    border-radius: 5px;
+    padding:2px;
+`;
+
+const SeasonsTitle = styled.h3`
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:5px;
+`;
+
+const SeasonsList = styled.span`
+    line-height:2;
 `;
 
 const DetailPresenter = ({ result, error, loading }) => (
@@ -104,8 +148,39 @@ const DetailPresenter = ({ result, error, loading }) => (
                                     index === result.genres.length - 1 ? genre.name : `${genre.name} / `
                                 )}
                             </Item>
+                            {result.imdb_id && 
+                                <>
+                                    <Divider>·</Divider>
+                                    <IMDB href={"https://www.imdb.com/title/"+`${result.imdb_id}`} target="_blank">
+                                        IDMB
+                                    </IMDB>
+                                </>
+                            }
                         </ItemContainer>
+                        <Network>
+                            {result.networks ? result.networks.map((company, index) => 
+                                index === result.networks.length - 1 ? company.name : `${company.name} / `
+                            ) : result.production_companies.map((company, index) => 
+                                index === result.production_companies.length - 1 ? company.name : `${company.name} / `
+                            )}
+                        </Network>
                         <Overview>{result.overview}</Overview>
+                        <VideoList>
+                                {result.videos.results && result.videos.results.map((video, index) => 
+                                    <VideoObj key={video.id}>
+                                        <Linked href={"https://www.youtube.com/watch?v="+`${video.key}`} target="_blank">
+                                            {video.name}
+                                        </Linked>
+                                    </VideoObj>
+                                )}
+                        </VideoList>
+                        {result.seasons && <SeasonsTitle>Season</SeasonsTitle>}
+                        {result.seasons &&
+                            result.seasons.map((season, index) =>
+                                <SeasonsList key={index}>
+                                    {season.name} {season.episode_count < 1 ? "" : (<SeasonCount>({season.episode_count} episodes)</SeasonCount>)}<br />
+                                </SeasonsList>
+                        )}
                     </Data>
                 </Content>
             </Container>
