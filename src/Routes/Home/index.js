@@ -5,8 +5,8 @@ import Loader from 'Components/Loader';
 import Section from 'Components/Section';
 import Message from 'Components/Message';
 import Poster from 'Components/Poster';
-import useHome from 'Hooks/useHome';
 import PropTypes from 'prop-types';
+import useHome from 'Hooks/useHome';
 
 const Container = styled.div`
     padding: 20px;
