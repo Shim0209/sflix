@@ -10,7 +10,7 @@ export default class extends React.Component {
         error: null,
         loading: false
     };
-
+ 
     // logic 추가
     // api 가져오기, error 처리
     handleSubmit = event => {

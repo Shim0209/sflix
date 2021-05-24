@@ -13,7 +13,7 @@ export default class extends React.Component {
             isMovie: pathname.includes("/movie/")
         };
     }
-    
+     
     // logic 추가
     // api 가져오기, error 처리
     async componentDidMount() {
@@ -47,7 +47,6 @@ export default class extends React.Component {
 
     render() {
         const { result, error, loading } = this.state;
-        console.log(this.state);
         return (
             <DetailPresenter 
                 result={result}

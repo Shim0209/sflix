@@ -10,7 +10,7 @@ const Container = styled.div`
     position:relative;
     padding: 50px;
 `;
-
+ 
 const Content = styled.div`
     width: 100%;
     height: 100%;
