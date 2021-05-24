@@ -213,6 +213,7 @@ Detail.propTypes = {
             first_air_date: PropTypes.string,
             number_of_episodes: PropTypes.string,
             production_companies: PropTypes.string,
+            origin_country: PropTypes.string,
             seasons: PropTypes.arrayOf(
                 PropTypes.shape({
                     name: PropTypes.string,
