@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import Loader from 'Components/Loader';
 import Message from 'Components/Message';
-import useDetail from 'Hooks/useDetail';
+import useDetail from 'Routes/Detail/useDetail';
 
 const Container = styled.div`
     height:calc(100vh - 50px);
@@ -34,6 +34,9 @@ const Data = styled.div`
 const Title = styled.h3`
     font-size: 32px;
     margin-bottom: 10px;
+`;
+const Country = styled.span`
+
 `;
 const ItemContainer = styled.div`
     margin:20px 0;
@@ -144,6 +147,10 @@ function Detail () {
                                         </IMDB>
                                     </>
                                 }
+                                {result.origin_country ? (<Divider>·</Divider>) : ""}
+                                <Country>
+                                   {result.origin_country}
+                                </Country>
                             </ItemContainer>
                             <Network>
                                 {result.networks ? result.networks.map((company, index) => 

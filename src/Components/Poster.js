@@ -20,7 +20,7 @@ const Rating = styled.span`
     position:absolute;
     bottom:3px;
     right:3px;
-    opacity:0.3;
+    opacity:0.5;
     transition: opacity 0.3s linear;
 `;
 

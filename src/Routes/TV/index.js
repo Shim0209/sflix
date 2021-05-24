@@ -6,7 +6,7 @@ import Section from 'Components/Section';
 import Message from 'Components/Message';
 import Poster from 'Components/Poster';
 import PropTypes from 'prop-types';
-import useTV from 'Hooks/useTV';
+import useTV from 'Routes/TV/useTV';
 
 const Container = styled.div`
     padding: 20px;
