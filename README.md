@@ -48,4 +48,8 @@ React를 활용한 영화정보공유 웹사이트
 
   프리젠터 디자인, react-helmet으로 웹페이지별 title 설정
 
-  
+- 21.05.24
+
+  Class구조(Container, Presenter)에서 Function구조(Hook)로 변경
+
+  Prop-Types 업그레이드
