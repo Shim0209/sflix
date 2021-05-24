@@ -22,7 +22,7 @@ export default class extends React.Component {
             this.setState({
                 popular, topRated, airingToday
             })
-
+ 
         } catch {
             this.setState({
                 error: "Can't find TV information."
