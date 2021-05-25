@@ -59,3 +59,6 @@ React를 활용한 영화정보공유 웹사이트
   TV Detail 페이지 추가 (감독, 방송사, 시즌정보, 출시일자 등)
   
   Movie Detail 페이지 추가 (제작국가, 제작회사 등)
+
+## Netlify 
+https://condescending-varahamihira-723e51.netlify.app/
