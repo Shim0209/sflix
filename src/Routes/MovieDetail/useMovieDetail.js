@@ -15,7 +15,6 @@ const useMovieDetail = () => {
             return push("/");
         }
     }
-    console.log('moviedetail id', id);
     useEffect(checkId, []);
     let result = null;
     const getData = async () => {

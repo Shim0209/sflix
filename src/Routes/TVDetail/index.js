@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
 import Loader from 'Components/Loader';
+import PropTypes from 'prop-types';
 import useTVDetail from 'Routes/TVDetail/useTVDetail';
 
 const Modal = styled.div`
@@ -15,7 +16,6 @@ const Modal = styled.div`
     align-items: center;
     z-index: 100;
 `;
-
 const Container = styled.div`
     width: 50%;
     height: 90%;
@@ -49,7 +49,7 @@ const BrodcatBlock = styled.div`
 `;
 const Brodcast = styled.div`
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
     padding: 5px;
     gap: 5px;
     margin-bottom: 15px;
@@ -111,7 +111,6 @@ const SeasonCount = styled.div`
 function TVDetail () {
     const {state:{result, error, loading}} = useTVDetail();
     return (
-        
         <Modal>
             <Helmet>
                 <title>TV Detail | Sflix</title>
@@ -168,7 +167,39 @@ function TVDetail () {
                 </Container>
             )}
         </Modal>
-          
+    )
+}
+
+TVDetail.prototype = {
+    result:PropTypes.arrayOf(
+        PropTypes.shape({
+            id:PropTypes.string.isRequired,
+            original_name: PropTypes.string.isRequired,
+            created_by:PropTypes.arrayOf(
+                PropTypes.shape({
+                    id:PropTypes.string,
+                    name:PropTypes.string
+                })
+            ),
+            origin_country:PropTypes.string,
+            homepage:PropTypes.string,
+            networks:PropTypes.arrayOf(
+                PropTypes.shape({
+                    id:PropTypes.string,
+                    logo_path:PropTypes.string,
+                    name:PropTypes.string
+                })
+            ),
+            seasons:PropTypes.arrayOf(
+                PropTypes.shape({
+                    id:PropTypes.string,
+                    name:PropTypes.string,
+                    air_date:PropTypes.string,
+                    episode_count:PropTypes.string,
+                    poster_path:PropTypes.string
+                })
+            )
+        })
     )
 }
 

@@ -10,7 +10,6 @@ const useTVDetail = () => {
         error: null,
         loading: true
     }) 
-    console.log('tvdetail id', id);
     const checkId = () => {
         if(isNaN(id)){
             return push("/");

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
 import Loader from 'Components/Loader';
+import PropTypes from 'prop-types';
 import useMovieDetail from 'Routes/MovieDetail/useMovieDetail';
 
 const Modal = styled.div`
@@ -15,7 +16,6 @@ const Modal = styled.div`
     align-items: center;
     z-index: 100;
 `;
- 
 const Container = styled.div`
     width: 50%;
     opacity: 1;
@@ -63,13 +63,10 @@ const ProductionCountry = styled.div`
     margin-bottom: 10px;
 `;
 const ProductionCompanyCountry = styled.div`
-
 `;
 
-
-function TVDetail () {
+function MovieDetail () {
     const {state:{result, error, loading}} = useMovieDetail();
-    console.log('check', result);
     return (
         
         <Modal>
@@ -111,4 +108,27 @@ function TVDetail () {
     )
 }
 
-export default TVDetail;
+MovieDetail.propTypes = {
+    result:PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            original_title: PropTypes.string.isRequired,
+            homepage: PropTypes.string,
+            production_countries:PropTypes.arrayOf(
+                PropTypes.shape({
+                    name: PropTypes.string
+                })
+            ),
+            production_companies:PropTypes.arrayOf(
+                PropTypes.shape({
+                    id: PropTypes.string,
+                    logo_path: PropTypes.string,
+                    name: PropTypes.string,
+                    origin_country: PropTypes.string
+                })
+            ) 
+        })
+    )
+}
+
+export default MovieDetail;

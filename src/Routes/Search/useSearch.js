@@ -22,7 +22,6 @@ const useSearch = () => {
             ...state,
             searchTerm: event.target.value
         })
-        console.log('searchTerm', state.searchTerm);
     }
 
     const searchByTerm = async() => {
