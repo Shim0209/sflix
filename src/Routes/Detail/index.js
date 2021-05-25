@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import Helmet from 'react-helmet';
@@ -92,17 +93,26 @@ const SeasonCount = styled.span`
     border-radius: 5px;
     padding:2px;
 `;
-const SeasonsTitle = styled.h3`
-    font-size:20px;
+const SeasonsTitle = styled.button`
+    font-size:15px;
     font-weight:600;
     margin-bottom:5px;
+    display: block;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    &:hover{
+        box-shadow: 1px 0px 10px tomato;
+    }
 `;
 const SeasonsList = styled.span`
     line-height:2;
 `;
 
 function Detail () {
-    const {state:{result, error, loading}} = useDetail();
+    const {state:{result, error, loading, isMovie}} = useDetail();
 
     return (
         <>
@@ -169,12 +179,16 @@ function Detail () {
                                         </VideoObj>
                                     )}
                             </VideoList>
-                            {result.seasons && <SeasonsTitle>Season</SeasonsTitle>}
+                            {result.seasons && (
+                                <Link to={ isMovie ? `/movie/${result.id}/detail` : `/tv/${result.id}/detail`}>
+                                    <SeasonsTitle>Season ▸</SeasonsTitle>
+                                </Link>
+                            )}
                             {result.seasons &&
                                 result.seasons.map((season, index) =>
-                                    <SeasonsList key={index}>
-                                        {season.name} {season.episode_count < 1 ? "" : (<SeasonCount>({season.episode_count} episodes)</SeasonCount>)}<br />
-                                    </SeasonsList>
+                                        <SeasonsList key={index}>
+                                            {season.name} {season.episode_count < 1 ? "" : (<SeasonCount>({season.episode_count} episodes)</SeasonCount>)}<br />
+                                        </SeasonsList>
                             )}
                         </Data>
                     </Content>

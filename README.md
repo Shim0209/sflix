@@ -53,3 +53,7 @@ React를 활용한 영화정보공유 웹사이트
   Class구조(Container, Presenter)에서 Function구조(Hook)로 변경
 
   Prop-Types 업그레이드
+
+- 21.05.25
+
+  TV Detail 페이지 추가 (감독, 방송사, 시즌정보, 출시일자 등)
