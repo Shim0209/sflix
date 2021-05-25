@@ -10,6 +10,7 @@ import useHome from 'Routes/Home/useHome';
 
 const Container = styled.div`
     padding: 20px;
+    overflow: scroll;
 `;
 
 function Home () {

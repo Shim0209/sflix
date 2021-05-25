@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import {useLocation, useParams, useHistory} from 'react-router-dom';
 import { tvApi, movieApi } from 'api';
 

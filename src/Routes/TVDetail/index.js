@@ -3,10 +3,6 @@ import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
 import Loader from 'Components/Loader';
-import Section from 'Components/Section';
-import Message from 'Components/Message';
-import Poster from 'Components/Poster';
-import PropTypes, { func } from 'prop-types';
 import useTVDetail from 'Routes/TVDetail/useTVDetail';
 
 const Modal = styled.div`
@@ -122,46 +118,52 @@ function TVDetail () {
             </Helmet>
             {loading ? (<Loader />) : (
                 <Container>
-                <Link to={`/tv/${result.id}`}>
-                    <Title>{result.original_name ? result.original_name : "" }</Title>
-                    <Director>CreateBy&nbsp;
-                    {result.created_by && result.created_by.map(( director, index) => 
-                        index === result.created_by.length-1 ? <DirectorItem>{director.name}</DirectorItem> : <DirectorItem>{`${director.name},`}&nbsp;</DirectorItem>
-                    )}
-                    {result.created_by.length < 1 ? <DirectorItem>null</DirectorItem> : ""} 
-                    </Director>
-                    <OriginCountry>OriginCountry :&nbsp;
-                    {result.origin_country}
-                    </OriginCountry>
-                    <Homepage href={result.homepage && result.homepage}>Homepage :&nbsp;
-                    {result.homepage ? result.homepage : "null"}
-                    </Homepage>
-                    <BrodcatBlock>Brodcast Station</BrodcatBlock>
-                    <Brodcast>
-                    {result.networks ? result.networks.map((company) => 
-                        <BrodcastItem>
-                            <BrodcastImg src={`https://image.tmdb.org/t/p/original${company.logo_path}`} />
-                            <BrodcastName>{company.name}</BrodcastName>
-                        </BrodcastItem>
-                    ) : "null"}
-                    </Brodcast>
-                    <SeasonBlock>Season</SeasonBlock>
-                    <Season>
-                    {result.seasons ? result.seasons.map((season) => 
-                        <SeasonItem>
-                            <SeasonName>{season.name}</SeasonName>
-                            
-                            <SeasonInfo>
-                                <SeasonDate>First_air_date:
-                                {season.air_date}</SeasonDate>
-                                <SeasonCount>Episode Count:
-                                    {season.episode_count}
-                                </SeasonCount>
-                            </SeasonInfo>
-                            <SeasonPoster src={`https://image.tmdb.org/t/p/original${season.poster_path}`} />
-                        </SeasonItem>
-                    ) : "null"}
-                    </Season>
+                    <Link to={`/tv/${result.id}`}>
+                        <Title>{result.original_name ? result.original_name : "" }</Title>
+                        <Director>CreateBy&nbsp;
+                        {result.created_by && result.created_by.map(( director, index) => 
+                            index === result.created_by.length-1 
+                            ? <DirectorItem key={director.id}>{director.name}</DirectorItem> 
+                            : <DirectorItem key={director.id}>{`${director.name},`}&nbsp;</DirectorItem>
+                        )}
+                        {result.created_by.length < 1 ? <DirectorItem>null</DirectorItem> : ""} 
+                        </Director>
+                        <OriginCountry>OriginCountry :&nbsp;
+                        {result.origin_country}
+                        </OriginCountry>
+                        <Homepage href={result.homepage && result.homepage}>Homepage :&nbsp;
+                        {result.homepage ? result.homepage : "null"}
+                        </Homepage>
+                        <BrodcatBlock>Brodcast Station</BrodcatBlock>
+                        <Brodcast>
+                        {result.networks ? result.networks.map((company) => 
+                            <BrodcastItem key={company.id}>
+                                <BrodcastImg src={`https://image.tmdb.org/t/p/original${company.logo_path}`} />
+                                <BrodcastName>{company.name}</BrodcastName>
+                            </BrodcastItem>
+                        ) : "null"}
+                        </Brodcast>
+                        <SeasonBlock>Season</SeasonBlock>
+                        <Season>
+                        {result.seasons ? result.seasons.map((season) => 
+                            <SeasonItem key={season.id}>
+                                <SeasonName>{season.name}</SeasonName>
+                                <SeasonInfo>
+                                    <SeasonDate>First_air_date:
+                                    {season.air_date}</SeasonDate>
+                                    <SeasonCount>Episode Count:
+                                        {season.episode_count}
+                                    </SeasonCount>
+                                </SeasonInfo>
+                                <SeasonPoster src={
+                                    season.poster_path 
+                                    ? `https://image.tmdb.org/t/p/original${season.poster_path}`
+                                    : require("../../assets/noPosterSmall.png").default
+                                    } 
+                                />
+                            </SeasonItem>
+                        ) : "null"}
+                        </Season>
                     </Link>  
                 </Container>
             )}

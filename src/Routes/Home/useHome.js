@@ -1,4 +1,4 @@
-import React, {useEffect ,useState} from 'react';
+import {useEffect ,useState} from 'react';
 import { movieApi } from 'api';
 
 const useHome = () => {
@@ -33,7 +33,6 @@ const useHome = () => {
     }
 
     useEffect(getData, []);
-    
     return {state};
 }
 

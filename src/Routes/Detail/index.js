@@ -19,6 +19,7 @@ const Content = styled.div`
     display:flex;
     z-index: 1;
     position:relative;
+    overflow: scroll;
 `;
 const Cover = styled.div`
     width:30%;
@@ -50,7 +51,7 @@ const Overview = styled.p`
     font-size:13px;
     opacity: 0.8;
     line-height: 1.5;
-    width:50%;
+    width:90%;
 `;
 const Network = styled.div`
     margin:20px 0px;
@@ -110,10 +111,23 @@ const SeasonsTitle = styled.button`
 const SeasonsList = styled.span`
     line-height:2;
 `;
+const MovieMoreDetail = styled.button`
+    font-size:15px;
+    font-weight:600;
+    margin-bottom:5px;
+    display: block;
+    outline: none;
+    border: none;
+    border-radius: 5px;
+    background-color: black;
+    color: white;
+    &:hover{
+        box-shadow: 1px 0px 10px tomato;
+    }
+`;
 
 function Detail () {
     const {state:{result, error, loading, isMovie}} = useDetail();
-
     return (
         <>
             <Helmet>
@@ -180,7 +194,7 @@ function Detail () {
                                     )}
                             </VideoList>
                             {result.seasons && (
-                                <Link to={ isMovie ? `/movie/${result.id}/detail` : `/tv/${result.id}/detail`}>
+                                <Link to={`/tv/${result.id}/detail`}>
                                     <SeasonsTitle>Season ▸</SeasonsTitle>
                                 </Link>
                             )}
@@ -189,6 +203,11 @@ function Detail () {
                                         <SeasonsList key={index}>
                                             {season.name} {season.episode_count < 1 ? "" : (<SeasonCount>({season.episode_count} episodes)</SeasonCount>)}<br />
                                         </SeasonsList>
+                            )}
+                            {isMovie && (
+                                <Link to={`/movie/${result.id}/detail`}>
+                                    <MovieMoreDetail>More Detail</MovieMoreDetail>
+                                </Link>
                             )}
                         </Data>
                     </Content>

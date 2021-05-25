@@ -1,26 +1,26 @@
 import {useEffect, useState} from 'react';
 import {useParams, useHistory} from 'react-router-dom';
-import {tvApi} from 'api';
+import {movieApi} from 'api';
 
-const useTVDetail = () => {
+const useMovieDetail = () => {
     const {id} = useParams();
     const {push} = useHistory();    
     const [state, setState] = useState({
         result: null,
         error: null,
         loading: true
-    }) 
-    console.log('tvdetail id', id);
+    })
     const checkId = () => {
         if(isNaN(id)){
             return push("/");
         }
     }
+    console.log('moviedetail id', id);
     useEffect(checkId, []);
     let result = null;
     const getData = async () => {
         try{
-            ({data: result} = await tvApi.tvDetail(id));
+            ({data: result} = await movieApi.movieDetail(id));
             setState({
                 ...state,
                 result,
@@ -38,4 +38,4 @@ const useTVDetail = () => {
     return {state};
 }
 
-export default useTVDetail;
+export default useMovieDetail;
