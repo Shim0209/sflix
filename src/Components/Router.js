@@ -1,6 +1,6 @@
 import React from "react";
 import {BrowserRouter as Router, Redirect, Route} from "react-router-dom";
-import Home from "Routes/Home";
+import Home from 'Routes/Home';
 import Search from "Routes/Search";
 import TV from "Routes/TV";
 import Detail from "Routes/Detail";

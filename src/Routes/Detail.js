@@ -5,7 +5,9 @@ import styled from 'styled-components';
 import Helmet from 'react-helmet';
 import Loader from 'Components/Loader';
 import Message from 'Components/Message';
-import useDetail from 'Routes/Detail/useDetail';
+import {useEffect, useState} from 'react';
+import {useLocation, useParams, useHistory} from 'react-router-dom';
+import { tvApi, movieApi } from 'api';
 
 const Container = styled.div`
     height:calc(100vh - 50px);
@@ -127,65 +129,103 @@ const MovieMoreDetail = styled.button`
 `;
 
 function Detail () {
-    const {state:{result, error, loading, isMovie}} = useDetail();
+    const {pathname} = useLocation();
+    const {id} = useParams();
+    const {push} = useHistory();    
+    const [state, setState] = useState({
+        result: null,
+        error: null,
+        loading: true,
+        isMovie: pathname.includes("/movie/")
+    })
+
+    let result = null;
+    const getData = async () => {
+        try{
+            if(state.isMovie) {
+                ({data: result} = await movieApi.movieDetail(id));
+            } else {
+                ({data: result} = await tvApi.tvDetail(id));
+            }
+            setState({
+                ...state,
+                result,
+                loading: false
+            })
+        } catch {
+            setState({
+                ...state,
+                error: "Can't find anything",
+                loading: false
+            })
+        }
+    }
+    const checkId = () => {
+        if(isNaN(id)){
+            return push("/");
+        }
+    }
+    useEffect(checkId, []);
+    useEffect(getData, []);
+
     return (
         <>
             <Helmet>
                 <title>Detail | Sflix</title>
             </Helmet>
-            {loading ? (
+            {state.loading ? (
                 <Loader />
             ) : (
                 <Container>
                     <Helmet>
-                        <title>{result.original_title || result.original_name} | Sflix</title>
+                        <title>{state.result.original_title || state.result.original_name} | Sflix</title>
                     </Helmet>
-                    <Backdrop bgImage={`https://image.tmdb.org/t/p/original${result.backdrop_path}`} />
+                    <Backdrop bgImage={`https://image.tmdb.org/t/p/original${state.result.backdrop_path}`} />
                     <Content>
                         <Cover bgImage={
-                                result.poster_path 
-                                    ? `https://image.tmdb.org/t/p/original${result.poster_path}` 
-                                    : require("../../assets/noPosterSmall.png").default
+                                state.result.poster_path 
+                                    ? `https://image.tmdb.org/t/p/original${state.result.poster_path}` 
+                                    : require("../assets/noPosterSmall.png").default
                                 } 
                         />
                         <Data>
-                            <Title>{result.original_title ? result.original_title : result.original_name}</Title>
+                            <Title>{state.result.original_title ? state.result.original_title : state.result.original_name}</Title>
                             <ItemContainer>
-                                <Item>{result.release_date ? result.release_date.substring(0, 4) : result.first_air_date.substring(0, 4)}</Item>
+                                <Item>{state.result.release_date ? state.result.release_date.substring(0, 4) : state.result.first_air_date.substring(0, 4)}</Item>
                                 <Divider>·</Divider>
                                 <Item>
-                                    {result.runtime ? "Runtime - "+result.runtime : result.number_of_episodes}
-                                    {result.runtime ? " min" : " episodes"}
+                                    {state.result.runtime ? "Runtime - "+state.result.runtime : state.result.number_of_episodes}
+                                    {state.result.runtime ? " min" : " episodes"}
                                 </Item>
                                 <Divider>·</Divider>
                                 <Item>
-                                    {result.genres && result.genres.map((genre, index) => 
-                                        index === result.genres.length - 1 ? genre.name : `${genre.name} / `
+                                    {state.result.genres && state.result.genres.map((genre, index) => 
+                                        index === state.result.genres.length - 1 ? genre.name : `${genre.name} / `
                                     )}
                                 </Item>
-                                {result.imdb_id && 
+                                {state.result.imdb_id && 
                                     <>
                                         <Divider>·</Divider>
-                                        <IMDB href={"https://www.imdb.com/title/"+`${result.imdb_id}`} target="_blank">
+                                        <IMDB href={"https://www.imdb.com/title/"+`${state.result.imdb_id}`} target="_blank">
                                             IDMB
                                         </IMDB>
                                     </>
                                 }
-                                {result.origin_country ? (<Divider>·</Divider>) : ""}
+                                {state.result.origin_country ? (<Divider>·</Divider>) : ""}
                                 <Country>
-                                   {result.origin_country}
+                                   {state.result.origin_country}
                                 </Country>
                             </ItemContainer>
                             <Network>
-                                {result.networks ? result.networks.map((company, index) => 
-                                    index === result.networks.length - 1 ? company.name : `${company.name} / `
-                                ) : result.production_companies.map((company, index) => 
-                                    index === result.production_companies.length - 1 ? company.name : `${company.name} / `
+                                {state.result.networks ? state.result.networks.map((company, index) => 
+                                    index === state.result.networks.length - 1 ? company.name : `${company.name} / `
+                                ) : state.result.production_companies.map((company, index) => 
+                                    index === state.result.production_companies.length - 1 ? company.name : `${company.name} / `
                                 )}
                             </Network>
-                            <Overview>{result.overview}</Overview>
+                            <Overview>{state.result.overview}</Overview>
                             <VideoList>
-                                    {result.videos.results && result.videos.results.map((video, index) => 
+                                    {state.result.videos.results && state.result.videos.results.map((video, index) => 
                                         <VideoObj key={video.id}>
                                             <Linked href={"https://www.youtube.com/watch?v="+`${video.key}`} target="_blank">
                                                 {video.name}
@@ -193,25 +233,25 @@ function Detail () {
                                         </VideoObj>
                                     )}
                             </VideoList>
-                            {result.seasons && (
-                                <Link to={`/tv/${result.id}/detail`}>
+                            {state.result.seasons && (
+                                <Link to={`/tv/${state.result.id}/detail`}>
                                     <SeasonsTitle>Season ▸</SeasonsTitle>
                                 </Link>
                             )}
-                            {result.seasons &&
-                                result.seasons.map((season, index) =>
+                            {state.result.seasons &&
+                                state.result.seasons.map((season, index) =>
                                         <SeasonsList key={index}>
                                             {season.name} {season.episode_count < 1 ? "" : (<SeasonCount>({season.episode_count} episodes)</SeasonCount>)}<br />
                                         </SeasonsList>
                             )}
-                            {isMovie && (
-                                <Link to={`/movie/${result.id}/detail`}>
+                            {state.isMovie && (
+                                <Link to={`/movie/${state.result.id}/detail`}>
                                     <MovieMoreDetail>More Detail</MovieMoreDetail>
                                 </Link>
                             )}
                         </Data>
                     </Content>
-                    {error && <Message color="#e74c3c" text={error} />}
+                    {state.error && <Message color="#e74c3c" text={state.error} />}
                 </Container>
             )}
         </>

@@ -6,7 +6,8 @@ import Section from 'Components/Section';
 import Message from 'Components/Message';
 import Poster from 'Components/Poster';
 import PropTypes from 'prop-types';
-import useHome from 'Routes/Home/useHome';
+import {useEffect ,useState} from 'react';
+import { movieApi } from 'api';
 
 const Container = styled.div`
     padding: 20px;
@@ -14,17 +15,48 @@ const Container = styled.div`
 `;
 
 function Home () {
-    const {state:{nowPlaying, upcoming, popular, error, loading}} = useHome();
+    const [state, setState] = useState({
+        nowPlaying : null,
+        upcoming: null,
+        popular: null,
+        error: null,
+        loading: true
+    });
+
+    const getData = async () => {
+        try {
+            const { data: { results: nowPlaying } } = await movieApi.nowPlaying();
+            const { data: { results: upcoming } } = await movieApi.upcoming();
+            const { data: { results: popular } } = await movieApi.popular();
+            setState({
+                ...state,
+                nowPlaying,
+                upcoming,
+                popular,
+                loading:false
+            })
+
+        } catch(e) {
+            setState({
+                ...state,
+                error: "Can't find movies information",
+                loading: false
+            })
+        }
+    }
+
+    useEffect(getData, []);
+
     return (
         <>
             <Helmet>
                 <title>Movie | Sflix</title>
             </Helmet>
-            {loading ? (<Loader />) : (
+            {state.loading ? (<Loader />) : (
                 <Container>
-                    {nowPlaying && nowPlaying.length > 0 && (
+                    {state.nowPlaying && state.nowPlaying.length > 0 && (
                         <Section title="Now Playing">
-                            {nowPlaying.map(movie => 
+                            {state.nowPlaying.map(movie => 
                                 <Poster 
                                     key={movie.id} 
                                     id={movie.id} 
@@ -37,9 +69,9 @@ function Home () {
                             )}
                         </Section>
                     )}
-                    {upcoming && upcoming.length > 0 && (
+                    {state.upcoming && state.upcoming.length > 0 && (
                         <Section title="Popular Movies">
-                            {upcoming.map(movie => 
+                            {state.upcoming.map(movie => 
                                 <Poster 
                                     key={movie.id} 
                                     id={movie.id} 
@@ -52,9 +84,9 @@ function Home () {
                             )}
                         </Section>
                     )}
-                    {popular && popular.length > 0 && (
+                    {state.popular && state.popular.length > 0 && (
                         <Section title="Upcoming Movies">
-                            {popular.map(movie => 
+                            {state.popular.map(movie => 
                                 <Poster 
                                     key={movie.id} 
                                     id={movie.id} 
@@ -67,7 +99,7 @@ function Home () {
                             )}
                         </Section>
                     )}
-                    {error && <Message color="#e74c3c" text={error} />}
+                    {state.error && <Message color="#e74c3c" text={state.error} />}
                 </Container>
             )}
         </>
