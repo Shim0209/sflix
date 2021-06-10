@@ -6,24 +6,55 @@ import Section from 'Components/Section';
 import Message from 'Components/Message';
 import Poster from 'Components/Poster';
 import PropTypes from 'prop-types';
-import useTV from 'Routes/TV/useTV';
+import {useEffect, useState} from 'react';
+import { tvApi } from 'api';
 
 const Container = styled.div`
     padding: 20px;
 `; 
 
 function TV () {
-    const {state:{popular, topRated, airingToday, error, loading}} = useTV();
+    const [state, setState] = useState({
+        popular: null,
+        topRated: null,
+        airingToday: null,
+        error: null,
+        loading: true
+    });
+
+    const getData = async () => {
+        try {
+            const { data: { results: popular } } = await tvApi.popular();
+            const { data: { results: topRated } } = await tvApi.topRated();
+            const { data: { results: airingToday } } = await tvApi.airingToday();
+            setState({
+                ...state,
+                popular,
+                topRated,
+                airingToday,
+                loading:false
+            })
+        } catch {
+            setState({
+                ...state,
+                error: "Can't find TV information.",
+                loading:false
+            })
+        }
+    }
+
+    useEffect(getData, []);
+
     return (
         <>
             <Helmet>
                 <title>TV | Sflix</title>
             </Helmet>
-            {loading ? <Loader /> : 
+            {state.loading ? <Loader /> : 
                 <Container>
-                    {topRated && topRated.length > 0 && (
+                    {state.topRated && state.topRated.length > 0 && (
                         <Section title="TopRated TV">
-                            {topRated.map(tv => 
+                            {state.topRated.map(tv => 
                                 <Poster 
                                     key={tv.id} 
                                     id={tv.id} 
@@ -36,9 +67,9 @@ function TV () {
                             )}
                         </Section>
                     )}
-                    {airingToday && airingToday.length > 0 && (
+                    {state.airingToday && state.airingToday.length > 0 && (
                         <Section title="AiringToday TV">
-                            {topRated.map(tv => 
+                            {state.topRated.map(tv => 
                                 <Poster 
                                     key={tv.id} 
                                     id={tv.id} 
@@ -51,9 +82,9 @@ function TV () {
                             )}
                         </Section>
                     )}
-                    {popular && popular.length > 0 && (
+                    {state.popular && state.popular.length > 0 && (
                         <Section title="Popular TV">
-                            {topRated.map(tv => 
+                            {state.topRated.map(tv => 
                                 <Poster 
                                     key={tv.id} 
                                     id={tv.id} 
@@ -66,7 +97,7 @@ function TV () {
                             )}
                         </Section>
                     )}
-                    {error && <Message color="#e74c3c" text={error} />}
+                    {state.error && <Message color="#e74c3c" text={state.error} />}
                 </Container>
             };
         </>
