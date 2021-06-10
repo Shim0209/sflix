@@ -62,7 +62,7 @@ React를 활용한 영화정보공유 웹사이트
 
 - 21.06.10 ~ 
 
-  Routes 구조 개선 (Home, Detail)
+  Routes 구조 개선 (Home, TV, Detail)
 
   기존 index.js + useXXX.js 방식에서 하나의 파일로 통합
 
