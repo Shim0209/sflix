@@ -22,9 +22,12 @@ React를 활용한 영화정보공유 웹사이트
 
 ## 추가항목
 
+- [x] class 방식에서 hook 방식으로 변경
 - [x] IMDB Link
 - [x] Tabs inside of Movie / TV Details (YT Vidoes, Production Company $ Coutries)
 - [x] On TV Show, show seasons and creators
+- [x] Routes 구조개선
+- [ ] 컴포넌트 분리
 
 ## 진행상황
 
