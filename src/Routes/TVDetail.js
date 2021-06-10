@@ -4,7 +4,9 @@ import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
 import Loader from 'Components/Loader';
 import PropTypes from 'prop-types';
-import useTVDetail from 'Routes/TVDetail/useTVDetail';
+import {useEffect, useState} from 'react';
+import {useParams, useHistory} from 'react-router-dom';
+import {tvApi} from 'api';
 
 const Modal = styled.div`
     width: 100%;
@@ -109,33 +111,64 @@ const SeasonCount = styled.div`
 `;
 
 function TVDetail () {
-    const {state:{result, error, loading}} = useTVDetail();
+    const {id} = useParams();
+    const {push} = useHistory();    
+    const [state, setState] = useState({
+        result: null,
+        error: null,
+        loading: true
+    }) 
+    const checkId = () => {
+        if(isNaN(id)){
+            return push("/");
+        }
+    }
+    useEffect(checkId, []);
+    let result = null;
+    const getData = async () => {
+        try{
+            ({data: result} = await tvApi.tvDetail(id));
+            setState({
+                ...state,
+                result,
+                loading: false
+            })
+        } catch {
+            setState({
+                ...state,
+                error: "Can't find anything",
+                loading: false
+            })
+        }
+    }
+    useEffect(getData, []);
+
     return (
         <Modal>
             <Helmet>
                 <title>TV Detail | Sflix</title>
             </Helmet>
-            {loading ? (<Loader />) : (
+            {state.loading ? (<Loader />) : (
                 <Container>
-                    <Link to={`/tv/${result.id}`}>
-                        <Title>{result.original_name ? result.original_name : "" }</Title>
+                    <Link to={`/tv/${state.result.id}`}>
+                        <Title>{state.result.original_name ? state.result.original_name : "" }</Title>
                         <Director>CreateBy&nbsp;
-                        {result.created_by && result.created_by.map(( director, index) => 
-                            index === result.created_by.length-1 
+                        {state.result.created_by && state.result.created_by.map(( director, index) => 
+                            index === state.result.created_by.length-1 
                             ? <DirectorItem key={director.id}>{director.name}</DirectorItem> 
                             : <DirectorItem key={director.id}>{`${director.name},`}&nbsp;</DirectorItem>
                         )}
-                        {result.created_by.length < 1 ? <DirectorItem>null</DirectorItem> : ""} 
+                        {state.result.created_by.length < 1 ? <DirectorItem>null</DirectorItem> : ""} 
                         </Director>
                         <OriginCountry>OriginCountry :&nbsp;
-                        {result.origin_country}
+                        {state.result.origin_country}
                         </OriginCountry>
-                        <Homepage href={result.homepage && result.homepage}>Homepage :&nbsp;
-                        {result.homepage ? result.homepage : "null"}
+                        <Homepage href={state.result.homepage && state.result.homepage}>Homepage :&nbsp;
+                        {state.result.homepage ? state.result.homepage : "null"}
                         </Homepage>
                         <BrodcatBlock>Brodcast Station</BrodcatBlock>
                         <Brodcast>
-                        {result.networks ? result.networks.map((company) => 
+                        {state.result.networks ? state.result.networks.map((company) => 
                             <BrodcastItem key={company.id}>
                                 <BrodcastImg src={`https://image.tmdb.org/t/p/original${company.logo_path}`} />
                                 <BrodcastName>{company.name}</BrodcastName>
@@ -144,7 +177,7 @@ function TVDetail () {
                         </Brodcast>
                         <SeasonBlock>Season</SeasonBlock>
                         <Season>
-                        {result.seasons ? result.seasons.map((season) => 
+                        {state.result.seasons ? state.result.seasons.map((season) => 
                             <SeasonItem key={season.id}>
                                 <SeasonName>{season.name}</SeasonName>
                                 <SeasonInfo>
@@ -157,7 +190,7 @@ function TVDetail () {
                                 <SeasonPoster src={
                                     season.poster_path 
                                     ? `https://image.tmdb.org/t/p/original${season.poster_path}`
-                                    : require("../../assets/noPosterSmall.png").default
+                                    : require("../assets/noPosterSmall.png").default
                                     } 
                                 />
                             </SeasonItem>

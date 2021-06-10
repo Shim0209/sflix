@@ -6,7 +6,8 @@ import Loader from "Components/Loader";
 import Section from "Components/Section";
 import Message from "Components/Message";
 import Poster from "Components/Poster";
-import useSearch from "Routes/Search/useSearch";
+import {useState} from 'react';
+import { tvApi, movieApi } from 'api';
 
 const Container = styled.div`
     padding:20px;
@@ -22,7 +23,47 @@ const Input = styled.input`
 `;
 
 function Search () {
-    const {state:{movieResults, tvResults, searchTerm, error, loading}, handleSubmit, onChange} = useSearch();
+    const [state, setState] = useState({
+        movieResults: null,
+        tvResults: null,
+        searchTerm: "",
+        error: null,
+        loading: false
+    });
+
+    const handleSubmit = event => {
+        event.preventDefault();
+        if(state.searchTerm !== "") {
+            searchByTerm();
+        }
+    }
+
+    const onChange = (event) => {
+        setState({
+            ...state,
+            searchTerm: event.target.value
+        })
+    }
+
+    const searchByTerm = async() => {
+        try {
+            const { data : { results: movieResults } } = await movieApi.search(state.searchTerm);
+            const { data : { results: tvResults } } = await tvApi.search(state.searchTerm);
+            setState({
+                ...state,
+                movieResults,
+                tvResults,
+                location: false
+            })
+        } catch {
+            setState({
+                ...state,
+                error: "Can't find results.",
+                location: false
+            })
+        }   
+    }
+
     return(
         <>
             <Helmet>
@@ -30,13 +71,13 @@ function Search () {
             </Helmet>
             <Container>
                 <Form onSubmit={handleSubmit}>
-                    <Input placeholder="Search Movies or TV Shows..." value={searchTerm} onChange={onChange}></Input>
+                    <Input placeholder="Search Movies or TV Shows..." value={state.searchTerm} onChange={onChange}></Input>
                 </Form>
-                {loading ? (<Loader />) : (
+                {state.loading ? (<Loader />) : (
                     <>
-                        {movieResults && movieResults.length > 0 && (
+                        {state.movieResults && state.movieResults.length > 0 && (
                             <Section title="Movie Results">
-                                {movieResults.map(movie => (
+                                {state.movieResults.map(movie => (
                                     <Poster 
                                         key={movie.id} 
                                         id={movie.id} 
@@ -49,9 +90,9 @@ function Search () {
                                 ))}
                             </Section>
                         )}
-                        {tvResults && tvResults.length > 0 && (
+                        {state.tvResults && state.tvResults.length > 0 && (
                             <Section title="TV Results">
-                                {tvResults.map(tv => (
+                                {state.tvResults.map(tv => (
                                     <Poster 
                                         key={tv.id} 
                                         id={tv.id} 
@@ -64,8 +105,8 @@ function Search () {
                                 ))}
                             </Section>
                         )}
-                        {error && <Message color="#e74c3c" text={error} />}
-                        {movieResults && tvResults && tvResults.length < 1 && movieResults < 1 && 
+                        {state.error && <Message color="#e74c3c" text={state.error} />}
+                        {state.movieResults && state.tvResults && state.tvResults.length < 1 && state.movieResults < 1 && 
                             <Message text="Nothing found" color="#95a5a6" />
                         }
                     </>

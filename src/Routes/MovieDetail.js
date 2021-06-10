@@ -4,7 +4,9 @@ import Helmet from 'react-helmet';
 import {Link} from 'react-router-dom';
 import Loader from 'Components/Loader';
 import PropTypes from 'prop-types';
-import useMovieDetail from 'Routes/MovieDetail/useMovieDetail';
+import {useEffect, useState} from 'react';
+import {useParams, useHistory} from 'react-router-dom';
+import {movieApi} from 'api';
 
 const Modal = styled.div`
     width: 100%;
@@ -66,29 +68,60 @@ const ProductionCompanyCountry = styled.div`
 `;
 
 function MovieDetail () {
-    const {state:{result, error, loading}} = useMovieDetail();
+    const {id} = useParams();
+    const {push} = useHistory();    
+    const [state, setState] = useState({
+        result: null,
+        error: null,
+        loading: true
+    })
+    const checkId = () => {
+        if(isNaN(id)){
+            return push("/");
+        }
+    }
+    useEffect(checkId, []);
+    let result = null;
+    const getData = async () => {
+        try{
+            ({data: result} = await movieApi.movieDetail(id));
+            setState({
+                ...state,
+                result,
+                loading: false
+            })
+        } catch {
+            setState({
+                ...state,
+                error: "Can't find anything",
+                loading: false
+            })
+        }
+    }
+    useEffect(getData, []);
+
     return (
         
         <Modal>
             <Helmet>
                 <title>Movie Detail | Sflix</title>
             </Helmet>
-            {loading ? (<Loader />) : (
+            {state.loading ? (<Loader />) : (
                 <Container>
-                    <Link to={`/movie/${result.id}`}>
-                        <Title>{result.original_title ? result.original_title : "" }</Title>
+                    <Link to={`/movie/${state.result.id}`}>
+                        <Title>{state.result.original_title ? state.result.original_title : "" }</Title>
                         <ProductionCountry>ProductionCountry :&nbsp;
-                        {result.production_countries && result.production_countries.map((country, index) => 
-                            index === result.production_countries.length -1 ? country.name : `${country.name}, `
+                        {state.result.production_countries && state.result.production_countries.map((country, index) => 
+                            index === state.result.production_countries.length -1 ? country.name : `${country.name}, `
                         )}
                         </ProductionCountry>
-                        <Homepage href={result.homepage && result.homepage}>Homepage :&nbsp;
-                        {result.homepage ? result.homepage : "null"}
+                        <Homepage href={state.result.homepage && state.result.homepage}>Homepage :&nbsp;
+                        {state.result.homepage ? state.result.homepage : "null"}
                         </Homepage>
 
                         <ProductionBlock>Production Company</ProductionBlock>
                         <Production>
-                        {result.production_companies ? result.production_companies.map((company) => 
+                        {state.result.production_companies ? state.result.production_companies.map((company) => 
                             <ProductionItem key={company.id}>
                                 <ProductionImg src={
                                         company.logo_path 
