@@ -28,6 +28,7 @@ React를 활용한 영화정보공유 웹사이트
 - [x] On TV Show, show seasons and creators
 - [x] Routes 구조개선
 - [ ] 컴포넌트 분리
+- [ ] 디자인 개선
 
 ## 진행상황
 
